@@ -1,0 +1,52 @@
+name: Build iOS IPA
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: Build iOS IPA
+    runs-on: macos-12
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Xcode
+      uses: maxim-lobanov/setup-xcode@v1
+      with:
+        xcode-version: "16.4"
+
+    - name: Install dependencies
+      run: |
+        brew install xcodegen
+        xcodegen generate
+
+    - name: Build IPA
+      run: |
+        set -o pipefail && xcodebuild \
+          -scheme bitchat_iOS \
+          -sdk iphoneos \
+          -configuration Release \
+          -archivePath ${{ github.workspace }}/build/bitchat.xcarchive archive \
+          CODE_SIGN_STYLE=Automatic \
+          DEVELOPMENT_TEAM=L3N5LHJD5Y \
+          PROVISIONING_PROFILE_SPECIFIER="" \
+          | xcpretty
+
+        xcodebuild -exportArchive \
+          -archivePath ${{ github.workspace }}/build/bitchat.xcarchive \
+          -exportPath ${{ github.workspace }}/build \
+          -exportOptionsPlist ${{ github.workspace }}/ExportOptions.plist \
+          | xcpretty
+
+    - name: Upload IPA
+      uses: actions/upload-artifact@v3
+      with:
+        name: bitchat.ipa
+        path: ${{ github.workspace }}/build/*.ipa
