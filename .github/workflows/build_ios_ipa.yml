@@ -28,6 +28,10 @@ jobs:
         brew install xcodegen
         xcodegen generate
 
+    - name: List Schemes
+      run: |
+        xcodebuild -list
+
     - name: Build IPA
       run: |
         set -o pipefail && xcodebuild \
