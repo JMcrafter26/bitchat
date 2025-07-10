@@ -35,7 +35,7 @@ jobs:
     - name: Build IPA
       run: |
         set -o pipefail && xcodebuild \
-          -scheme bitchat_iOS \
+          -scheme "bitchat (iOS)" \
           -sdk iphoneos \
           -configuration Release \
           -archivePath ${{ github.workspace }}/build/bitchat.xcarchive archive \
