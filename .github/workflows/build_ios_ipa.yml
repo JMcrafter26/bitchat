@@ -49,8 +49,8 @@ jobs:
           zip -r bitchat-unsigned.ipa Payload
           mv bitchat-unsigned.ipa ../
 
-      - name: Upload unsigned IPA
-        uses: actions/upload-artifact@v3
+      - name: Upload unsigned build
+        uses: actions/upload-artifact@v4
         with:
-          name: bitchat-unsigned.ipa
-          path: build/bitchat-unsigned.ipa
+          name: unsigned-build
+          path: build/unsigned
